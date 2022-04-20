@@ -1,0 +1,11 @@
+Class Name | Assigned Member
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Member | 
+Employee | 
+Employee Interface | 
+ATM | 
+ATM Interface | 
+Debit Card | James Cazares
+Banking System | 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*Banking System Might need to be split further.
