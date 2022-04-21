@@ -1,6 +1,6 @@
 Class Name | Assigned Member
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Member | 
+Member | Diego Castaneda
 Employee | 
 Employee Interface | 
 ATM | 
@@ -9,3 +9,4 @@ Debit Card | James Cazares
 Banking System | 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *Banking System Might need to be split further.
+*comment by Diego: we might need to add a Message class to impement Serialized
