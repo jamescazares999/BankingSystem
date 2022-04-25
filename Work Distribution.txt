@@ -1,6 +1,6 @@
 Class Name | Assigned Member
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Member | Diego Castaneda - completed/needs verification
+Member | Diego Castaneda - completed/needs verification // we could implement member as Serilizable// or accounts as Serilizable
 Employee | Diego Castaneda - uploaded/imcomplete
 Employee Interface | 
 ATM | Sirpreet
