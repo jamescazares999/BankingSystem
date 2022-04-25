@@ -7,7 +7,8 @@ ATM | Sirpreet
 ATM Interface | khalil cato
 Debit Card | James Cazares
 Banking System | 
-Message | 
+Message |   // we could use object passing of Member or Account // any comments?
+Account |
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *Banking System Might need to be split further.
 *comment by Diego: we might need to add a Message class to impement Serialized
