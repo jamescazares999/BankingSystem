@@ -1,5 +1,6 @@
+//import java.io.IOException;
 
-public class Member {
+public class Member  {
 private static int accountNumber=0;
 private int pinNumber;
 private int routingNumber;
@@ -11,6 +12,8 @@ private String address;
 protected int socialSecurity;
 protected String legalIDNum;
 private double balance;
+//private Account[] accountList;
+
 	Member(){
 		setAccountNumber(getAccountNumber() + 1);
 		this.pinNumber=0;
@@ -92,5 +95,25 @@ public int getDebitCardNumber() {
 public void setDebitCardNumber(int debitCardNumber) {
 	this.debitCardNumber = debitCardNumber;
 }
+
+//public void addAccount(Account account) {
+//	
+//	this.accountList[accountList.length()] = account ;
+//}
+
+//public Account  getAccount(int accountNum) {
+//	for (Account acc:accountList) {
+//		try {
+//			if (acc.getID() == accountNum) {
+//				return acc;
+//			}
+//		}catch(IOException e) {
+//			e.printStackTrace();
+//			return null;
+//		}
+//			
+//	}
+//}
+
 
 }
