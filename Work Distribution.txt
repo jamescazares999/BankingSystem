@@ -4,7 +4,7 @@ Member | Diego Castaneda
 Employee | 
 Employee Interface | 
 ATM | Sirpreet
-ATM Interface | 
+ATM Interface | khalil cato
 Debit Card | James Cazares
 Banking System | 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
