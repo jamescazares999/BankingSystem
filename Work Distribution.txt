@@ -2,7 +2,7 @@ Class Name | Assigned Member
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Member | Diego Castaneda - completed/needs verification // we could implement member as Serilizable// or accounts as Serilizable
 Employee | Diego Castaneda - uploaded/incomplete
-Employee Interface | 
+Employee Interface | James Cazares
 ATM | Sirpreet
 ATM Interface | khalil cato -uploaded but incomplete. let me know if there is anything that should be added or changed.
 Debit Card | James Cazares
