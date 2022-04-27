@@ -8,7 +8,7 @@ ATM Interface | khalil cato -uploaded but incomplete. let me know if there is an
 Debit Card | James Cazares
 Banking System | 
 Message |   // we could use object passing of Member or Account // any thoughts?
-Account |Diego Castaneda
+Account |Diego Castaneda // uploaded//complete
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *Banking System Might need to be split further.
 *comment by Diego: we might need to add a Message class to impement Serialized
