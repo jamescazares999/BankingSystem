@@ -25,7 +25,9 @@ Account |Diego Castaneda // uploaded//complete - child class Savings and Checkin
  ex.
  public void BankingSystem::deposit(){
     message = (Message)objIn.readObject();
-    obj.search(message.getWho)<----  this is String class not Member{
+    obj.search(message.Member)<----  this is String class not Member // my bad I put getwho() which is correct
+   
+    {
     ...
     ..
     .
