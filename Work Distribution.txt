@@ -7,7 +7,7 @@ ATM | Sirpreet
 ATM Interface | khalil cato -uploaded but incomplete. let me know if there is anything that should be added or changed.
 Debit Card | James Cazares
 Banking System | 
-Message |   // we could use object passing of Member or Account // any thoughts?
+Message |   // 
 Account |Diego Castaneda // uploaded//complete - child class Savings and Checkings included
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *Banking System Might need to be split further.
