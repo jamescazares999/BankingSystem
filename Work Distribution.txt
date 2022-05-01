@@ -13,6 +13,10 @@ Account |Diego Castaneda // uploaded//complete - child class Savings and Checkin
 *Banking System Might need to be split further.
 *comment by Diego: we might need to add a Message class to impement Serialized
 
+** we could use ATM as parent and have Employee to inherit funtions like:
++debit card verification and reading
++deposit/withdrawls
++connecting to server
 
 //Notes form Diego:
   We could make neater if we just pass Strings and int in Message rather than Class objects.
