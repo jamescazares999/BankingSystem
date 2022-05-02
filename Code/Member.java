@@ -1,4 +1,6 @@
-//import java.io.IOException;
+import java.io.IOException;
+
+
 
 public class Member  {
 private static int accountNumber=0;
@@ -12,7 +14,7 @@ private String address;
 protected int socialSecurity;
 protected String legalIDNum;
 private double balance;
-//private Account[] accountList;
+private Account[] accountList;
 
 	Member(){
 		setAccountNumber(getAccountNumber() + 1);
@@ -96,24 +98,21 @@ public void setDebitCardNumber(int debitCardNumber) {
 	this.debitCardNumber = debitCardNumber;
 }
 
-//public void addAccount(Account account) {
-//	
-//	this.accountList[accountList.length()] = account ;
-//}
+public void addAccount(Account account) {
+	
+	this.accountList[accountList.length] = account ;
+}
 
-//public Account  getAccount(int accountNum) {
-//	for (Account acc:accountList) {
-//		try {
-//			if (acc.getID() == accountNum) {
-//				return acc;
-//			}
-//		}catch(IOException e) {
-//			e.printStackTrace();
-//			return null;
-//		}
-//			
-//	}
-//}
+public Account  getAccount(int accountNum) throws IOException {
+	Account act =null;
+	for (Account acc:accountList) {
+		if (acc.getID() == accountNum) {
+			act = acc;
+			break;
+		}			
+	}
+	return act;
+}
 
 
 }
