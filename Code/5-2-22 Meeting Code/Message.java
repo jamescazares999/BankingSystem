@@ -32,7 +32,7 @@ public class Message implements Serializable {
      * new Message("login", null, debitCardNumber, SecurityPin, "ATM", null)
      * 
      * Deposit message layout example;
-     * new Message("deposit", null, AccNum, 0, "employee", null);
+     * new Message("deposit", null, AccNum, amountDeposit, "employee", null);
      * 
      * Withdraw message layout example; transferBal can be used as a amount to withdraw
      * new Message("withdraw", null, AccNum, AmountToWithdraw, "employee", null);
@@ -40,10 +40,10 @@ public class Message implements Serializable {
      * Check Balance message layout example;	transferBal will be used to send back amount in account; to who can be what time of account
      * toWho in general will be null for general account
      * 
-     * new Message("check balance", null, AccNum, 0, "ATM", null);
+     * new Message("check balance", null, AccNum, 0, "ATM", null); check last amount in .toWho(); to get amount
      * 
      * Transfer message:				Transfer Bal is transfer amount
-     * new Message("transfer", null, AccNum, TransferAmount, "employee", ToWho as string format); 
+     * new Message("transfer", null, AccNum, TransferAmount, "employee", ToWho AccNum as string format); 
      * ill parse the last parameters to ints or whatever
      * 
      * Close account message:
@@ -66,10 +66,11 @@ public class Message implements Serializable {
     }
     
   //create account
-    public Message(String type, String status, Object mem, String who){
+    public Message(String type, String status, Member mem, String who){
         setType(type);
         setStatus(status);
         setWho(who);
+        this.mem = mem;
     }
     
     //Usual case = login, transfer, withdraw, deposit, check balance
@@ -128,6 +129,10 @@ public class Message implements Serializable {
     //Usual case = either ATM or EMPLOYEE; Unless transfer put accNum of sender
     public String getWho(){
     	return fromWho;
+    }
+    
+    public void setToWho(String toWho) {
+    	this.toWho = toWho;
     }
     
     //Usual case = from EMPLOYEE,to transfer account put accNum of receiver; Not used to say to Server leave null
