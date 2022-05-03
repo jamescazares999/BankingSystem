@@ -13,6 +13,13 @@ Account |Diego Castaneda // uploaded//complete - child class Savings and Checkin
 *Banking System Might need to be split further.
 *comment by Diego: we might need to add a Message class to impement Serialized
 
+//Notes From Amanual
+Verifying Debit Card Information needs to be worked on; I think ATM should contain all debit card info, verify its accurate, then establish a connection with the bank server for banking requests
+
+Or Bank server holds all Debit Cards and ATM just sends all info( number, pin) to server to verify. Also send what it wants over.
+
+Need an efficient way to save all this data also; Each Customer/Employee/DebitCard gets a file of their own for their data or something.
+
 ** we could use ATM as parent and have Employee to inherit funtions like:
 +debit card verification and reading
 +deposit/withdrawls
