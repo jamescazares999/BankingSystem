@@ -2,6 +2,7 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Map;
 import java.util.HashMap;
@@ -11,13 +12,15 @@ import java.util.TimerTask;
 
 public class BankingSystem{
 	/** The name of the data file that contains customer data */
-	private String customerSource;
-	private String employeeSource;
+	private static String customerSource;
+	private static String employeeSource;
+	private static String debitCardSource;
 	
 	private InetAddress IP;
 	private static int port = 1111;
-	private static HashMap<Integer, Employee> bankWorkers = new HashMap<Integer, Employee>();
+	private static HashMap<String, Employee> bankWorkers = new HashMap<String, Employee>();
 	private static HashMap<Integer, Member> customerRecords = new HashMap<Integer, Member>();
+	private static HashMap<Integer, DebitCard> debitCardVerify = new HashMap<Integer, DebitCard>();
 
 	    public static void main(String[] args) throws IOException, ClassNotFoundException {
 	        // Create a ServerSock on localhost:2251
@@ -133,8 +136,8 @@ public class BankingSystem{
 	 	 				if(message.getWho().equals("employee")) {
 	 	 				//Employee work = (Employee) message.getEmp();
 	 	 						
-	 	 					if(bankWorkers.containsKey(message.getlogId())) {
-	 	 						currently = (Employee) bankWorkers.get(message.getlogId());
+	 	 					if(bankWorkers.containsKey(message.getEmpLogin())) {
+	 	 						currently = (Employee) bankWorkers.get(message.getEmpLogin());
 	 	 						if(currently.getEmployeePassword() == message.getEmpPassword()) {
 		 	 						message.setStatus("Success");
 		 	 						loggedIn = true;
@@ -150,14 +153,15 @@ public class BankingSystem{
 	 	 				}
 	 	 				
  	 					if(message.getWho().equals("ATM")) {
- 	 						DebitCard customer = (DebitCard) message.getDebit();
- 	 						if(customerRecords.containsKey(customer.getTiedAccount())) {
-	 	 						now = (Member) customerRecords.get(customer.getTiedAccount());
+ 	 						int debitCardNum = (int) message.getAccNumOrBal();
+ 	 						int SecCode = (int) message.getTransferBalOrRegBalance();
+ 	 						if(debitCardVerify.containsKey(debitCardNum)) {
+	 	 						now = (Member) customerRecords.get(debitCardVerify.get(debitCardNum).getTiedAccount());
 	 	 					}
 	 	 					else {
 	 	 						message.setStatus("Failed... DebitCard not in System");
 	 	 					}
-	 	 					if(customer.getSecurityCode() == message.getPin()) {
+	 	 					if(debitCardVerify.get(debitCardNum).getSecurityCode() == SecCode) {
 	 	 						message.setStatus("Success");
 	 	 						loggedIn = true;
 	 	 					}
@@ -169,7 +173,7 @@ public class BankingSystem{
  	 					}
  	 					// change login type status to success in message
  	 					// from client
- 	 					
+ 	 					serverOutputStream.reset();
  	 					// sends message back to client with changes
  	 					serverOutputStream.writeObject(message);
  	 					//System.out.println("Success");
@@ -180,19 +184,23 @@ public class BankingSystem{
 	 					//deposit
 	 					if(message.getType().equals("deposit") && loggedIn == true) {
 	 						if(message.getWho().equals("employee")) {
-	 							double newbal = deposit(checkBalance(message.getAccNum()), message.getAmount());
-	 							customerRecords.get(message.getAccNum()).setBalance(newbal);
-	 							message.setStatus("success..." + message.getAmount() + " amount deposited.");
+	 							int AccNum = (int) message.getAccNumOrBal();
+	 							double addBal = message.getTransferBalOrRegBalance();
+	 							double newBal = deposit(checkBalance(AccNum), addBal);
+	 							customerRecords.get(message.getAccNumOrBal()).setBalance(newBal);
+	 							message.setStatus("success..." + addBal + " amount deposited.");
 	 	 					}
 	 						if(message.getWho().equals("ATM")) {
-		 						
-		 						double newbal = deposit(checkBalance(message.getDebit().getTiedAccount()), message.getAmount());
+		 						int debCard = (int) message.getAccNumOrBal();
+		 						double addBal = message.getTransferBalOrRegBalance();
+		 						double newbal = deposit(checkBalance(debitCardVerify.get(debCard).getTiedAccount()), addBal);
 		 						//change balance
-								customerRecords.get(message.getDebit().getTiedAccount()).setBalance(newbal);
-								message.setStatus("success..." + message.getAmount() + " amount deposited.");
+								customerRecords.get(debCard).setBalance(newbal);
+								message.setStatus("success..." + addBal + " amount deposited.");
 		 	 					
 		 	 				}
 		 	 					// sends message back to client with changes
+	 						serverOutputStream.reset();
 		 	 				serverOutputStream.writeObject(message);
 
 	 					}
@@ -200,32 +208,36 @@ public class BankingSystem{
 	 					// if message object is withdraw message, it runs this block
 	 					if(message.getType().equals("withdraw") && loggedIn == true) {
 	 						if(message.getWho().equals("employee")) {
-	 							if(checkBalance(message.getAccNum()) < 0) {
-	 								message.setStatus("denied... get your money up, not your funny up.");
+	 							if(checkBalance((int)message.getAccNumOrBal()) < 0) {
+	 								message.setStatus("denied... insufficient funds.");
 	 							}
 	 							else {
 	 							//change balance
-	 								double newbal = withdraw(checkBalance(message.getAccNum()), message.getAmount());
-	 								customerRecords.get(message.getAccNum()).setBalance(newbal);
-	 								message.setStatus("success..." + message.getAmount() + " amount withdrawn.");
+	 								double withdrawn = message.getTransferBalOrRegBalance();
+	 								double newbal = withdraw(checkBalance((int)message.getAccNumOrBal()), withdrawn);
+	 								customerRecords.get((int)message.getAccNumOrBal()).setBalance(newbal);
+	 								message.setStatus("success..." + withdrawn + " amount withdrawn.");
 	 	 						}
 	 	 					}
 	 	 					
 	 						if(message.getWho().equals("ATM")) {
-	 							if(checkBalance(message.getDebit().getTiedAccount()) < 0) {
+	 							int AccNum = debitCardVerify.get((int)message.getAccNumOrBal()).getTiedAccount();
+	 							if(checkBalance(AccNum) < 0) {
 	 								message.setStatus("denied... get your money up, not your funny up.");
 	 							}
-	 							else if(message.getAmount() >= 1000){
+	 							else if(message.getTransferBalOrRegBalance() >= 1000){
 	 								message.setStatus("denied... Go see clerk.");
 	 							}
 	 							else {
-	 								double newbal = withdraw(checkBalance(message.getDebit().getTiedAccount()), message.getAmount());
+	 								double withdrawn = message.getTransferBalOrRegBalance();
+	 								double newbal = withdraw(checkBalance(AccNum), withdrawn);
 	 								//change balance
-	 								customerRecords.get(message.getDebit().getTiedAccount()).setBalance(newbal);
-	 								message.setStatus("success..." + message.getAmount() + " amount withdrawn.");
+	 								customerRecords.get(AccNum).setBalance(newbal);
+	 								message.setStatus("success..." + withdrawn + " amount withdrawn.");
 	 	 						}
 	 	 					}
 	 	 					// sends message back to client with changes
+	 						serverOutputStream.reset();
 	 	 					serverOutputStream.writeObject(message);
 
 	 					}
@@ -233,30 +245,35 @@ public class BankingSystem{
 	 				// if message object is check balance message, it runs this block
 	 					if(message.getType().equals("check balance") && loggedIn == true) {
 	 						if(message.getWho().equals("employee")) {
-	 								message.setStatus("success..." + checkBalance(message.getAccNum()) + " in account.");
+	 								message.setStatus("success..." + checkBalance((int)message.getAccNumOrBal()) + " in account.");
 	 	 						}
 	 	 					
 	 						if(message.getWho().equals("ATM")) {
-	 								message.setStatus("success..." + checkBalance(message.getDebit().getTiedAccount()) + " in account.");
+	 								
+	 							message.setStatus("success...");
+	 							message.setToWho(checkBalance(debitCardVerify.get((int)message.getAccNumOrBal()).getTiedAccount()) + " in account.");
 	 	 					}
 	 	 					// sends message back to client with changes
+	 						serverOutputStream.reset();
 	 	 					serverOutputStream.writeObject(message);
 
 	 					}
 	 					
 	 				// if message object is transfer message, it runs this block
 	 					if(message.getType().equals("transfer") && loggedIn == true) {
-	 							if(checkBalance(message.getAccNum()) < message.getAmount()) {
-	 								message.setStatus("denied... get your money up, not your funny up.");
+	 							if(checkBalance((int)message.getAccNumOrBal()) < message.getTransferBalOrRegBalance()) {
+	 								message.setStatus("denied... insufficient funds.");
 	 							}
 	 							else {
 	 							//change balance
-	 								double newbal = withdraw(checkBalance(message.getAccNum()), message.getAmount());
-	 								customerRecords.get(message.getAccNum()).setBalance(newbal);
-	 								customerRecords.get(message.getTAcc()).setBalance(message.getAmount());
-	 								message.setStatus("success..." + message.getAmount() + " amount transfered" + " to " + message.getTAcc());
+	 								int AccNum = (int)message.getAccNumOrBal();
+	 								double newbal = withdraw(checkBalance(AccNum), message.getTransferBalOrRegBalance());
+	 								customerRecords.get(AccNum).setBalance(newbal);
+	 								customerRecords.get(Integer.parseInt(message.toWho())).setBalance(message.getTransferBalOrRegBalance());
+	 								message.setStatus("success..." + message.getTransferBalOrRegBalance() + " amount transfered" + " to " + Integer.parseInt(message.toWho()));
 	 	 						}
 	 	 					// sends message back to client with changes
+	 							serverOutputStream.reset();
 	 	 					serverOutputStream.writeObject(message);
 
 	 					}
@@ -268,34 +285,35 @@ public class BankingSystem{
 	 						message.setStatus("success... account created.");
 	 						
 	 	 					// sends message back to client with changes
+	 						serverOutputStream.reset();
 	 	 					serverOutputStream.writeObject(message);
 
 	 					}
 	 					
 	 				// if message object is delete account message, it runs this block
-	 					if(message.getType().equals("delete account") && loggedIn == true) {
+	 					if(message.getType().equals("close account") && loggedIn == true) {
 	 						//change balance
-	 						customerRecords.remove(message.getMember().getAccountNumber());
+	 						customerRecords.remove(message.getAccNumOrBal());
 	 						message.setStatus("success... account removed.");
 	 						
 	 	 					// sends message back to client with changes
+	 						serverOutputStream.reset();
 	 	 					serverOutputStream.writeObject(message);
 	 	 					
 	 					}
 	 					
 		 				// if message object is check logs message, it runs this block
-	 					if(message.getType().equals("checklogs") && loggedIn == true) {
-	 						
-
-	 					}
+	 					//if(message.getType().equals("checklogs") && loggedIn == true) {
+	 					//	
+	 					//
+	 					//}
 	 					
 	 	 			// if message object is logout message, it runs this block
 	 					if(message.getType().equals("logout") && loggedIn == true) {
 
 	 	 				// change login status to success in message
 	 	 				// from client
-	 						String type = "success";
-	 						message.setStatus(type);
+	 						message.setStatus("success");
 	  					
 	 	 				// sends message back to client with changes
 	 						serverOutputStream.writeObject(message);
@@ -340,7 +358,7 @@ public class BankingSystem{
 				
 		}
 	 	
- 	public void loadCustomer(String filename) {
+ 	public static void loadCustomer(String filename) {
 		customerSource = filename;
 		try {
 			File file = new File(filename);
@@ -349,20 +367,19 @@ public class BankingSystem{
 			while(scan.hasNextLine()) {
 				//String temp = scan.next();
 				String accNum = scan.next();
-				String pinNum = scan.next();
-				String routNum = scan.next();
+				//String pinNum = scan.next();
+				//String routNum = scan.next();
 				String debCNum = scan.next();
 				String legname = scan.next();
 				String age = scan.next();
 				String gender = scan.next();
 				String address = scan.next();
-				String social = scan.next();
-				String legalID = scan.next();
+				//String social = scan.next();
+				//String legalID = scan.next();
 				String balance = scan.next();
 				
-				customerRecords.put(Integer.parseInt(accNum), Member(Integer.parseInt(pinNum), Integer.parseInt(routNum), 
-						Integer.parseInt(debCNum),legname,Integer.parseInt(age), gender, address, Integer.parseInt(social), 
-						legalID, Double.parseDouble(balance)));
+				customerRecords.put(Integer.parseInt(accNum), new Member( Integer.parseInt(debCNum),legname,Integer.parseInt(age), gender,
+						address, Double.parseDouble(balance)));
 			}
 			scan.close();
 		}
@@ -372,7 +389,7 @@ public class BankingSystem{
 
 	}
  	
- 	public void saveCustomers() {
+ 	public static void saveCustomers() {
 		try {
 			FileWriter file = new FileWriter(customerSource);
 			for(int i = 0; i < customerRecords.size(); i++) {
@@ -385,13 +402,13 @@ public class BankingSystem{
 
 	}
  	
- 	public String toStringCustomer(Member m) {
+ 	public static String toStringCustomer(Member m) {
  		
 		String info = "";
 		info += m.getAccountNumber();
 		info += "/";
-		info += m.getRoutingNumber();
-		info += "/";
+		//info += m.getRoutingNumber();
+		//info += "/";
 		info += m.getDebitCardNumber();
 		info += "/";
 		info += m.getLegalName();
@@ -402,17 +419,17 @@ public class BankingSystem{
 		info += "/";
 		info += m.getAddress();
 		info += "/";
-		info += m.getSocialSecurity();
-		info += "/";
-		info += m.getLegalIDNum();
-		info += "/";
+		//info += m.getSocialSecurity();
+		//info += "/";
+		//info += m.getLegalIDNum();
+		//info += "/";
 		info += m.getBalance();
 		
 		return info;
 	}
  	
  	
- 	public void loadEmployee(String filename) {
+ 	public static void loadEmployee(String filename) {
 		employeeSource = filename;
 		try {
 			File file = new File(filename);
@@ -420,10 +437,10 @@ public class BankingSystem{
 			scan.useDelimiter("/");
 			while(scan.hasNextLine()) {
 				//String temp = scan.next();
-				int empNum = Integer.parseInt(scan.next());
+				String empLog = scan.next();
 				String empPass = scan.next();
 				
-				bankWorkers.put(empNum, Employee(empPass);
+				bankWorkers.put(empLog, new Employee(empPass, empLog));
 			}
 			scan.close();
 		}
@@ -432,25 +449,91 @@ public class BankingSystem{
 		}
 	}
  	
- 	public void saveEmployees() {
+ 	public static void saveEmployees() {
 		try {
 			FileWriter file = new FileWriter(customerSource);
-			for(int i = 0; i < customerRecords.size(); i++) {
-				file.write(toStringEmployee(bankWorkers.get(i)));
-			}
+			bankWorkers.forEach((key, value) -> {
+				try {
+					file.write(toStringEmployee(value));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			});
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 	}
  	
- 	public String toStringEmployee(Employee e) {
+ 	public static String toStringEmployee(Employee e) {
  		
 		String info = "";
 		info += e.getEmployeeNumber();
 		info += "/";
 		info += e.getEmployeePassword();
+		return info;
+	}
+ 	
+ 	public static void loadDebitCards(String filename) {
+		debitCardSource = filename;
+		try {
+			File file = new File(filename);
+			Scanner scan = new Scanner(file);
+			scan.useDelimiter("/");
+			while(scan.hasNextLine()) {
+				//String temp = scan.next();
+				String CardNumber = scan.next();
+				String SecurityCode = scan.next();
+				String TiedAccount = scan.next();
+				String CreatedDate = scan.next();
+				String ExpiryDate = scan.next();
+				String NameOnCard = scan.next();
+				
+				debitCardVerify.put(Integer.parseInt(CardNumber), new DebitCard(Integer.parseInt(CardNumber), Integer.parseInt(SecurityCode),
+						customerRecords.get(Integer.parseInt(TiedAccount))));
+				debitCardVerify.get(Integer.parseInt(CardNumber)).setCreatedDate(LocalDate.parse(CreatedDate));
+				debitCardVerify.get(Integer.parseInt(CardNumber)).setExpiryDate(LocalDate.parse(ExpiryDate));
+				debitCardVerify.get(Integer.parseInt(CardNumber)).setNameOnCard(NameOnCard);
+			}
+			scan.close();
+		}
+		catch(FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+ 	
+ 	public static void saveDebitCards() throws IOException{
+		try {
+			FileWriter file = new FileWriter(debitCardSource);
+			debitCardVerify.forEach((key, value) -> {
+				try {
+					file.write(toStringDebitCards(value));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			});
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+ 	
+ 	public static String toStringDebitCards(DebitCard cd) {
+		String info = "";
+		info += cd.getCardNumber();
 		info += "/";
+		info += cd.getSecurityCode();
+		info += "/";
+		info += cd.getTiedAccount();
+		info += "/";
+		info += cd.getCreatedDate();
+		info += "/";
+		info += cd.getExpiryDate();
+		info += "/";
+		info += cd.getNameOnCard();
 		return info;
 	}
  	
