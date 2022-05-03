@@ -6,7 +6,10 @@ public class Message implements Serializable {
     protected String type;
     protected String status;
     protected Member mem;
-    protected String who;
+    protected String fromWho;
+    protected String toWho;
+    protected double accNumOrBal;
+    protected double transferBal;
     
     //can be used as debit pin or employee ID
     protected String login;
@@ -16,45 +19,84 @@ public class Message implements Serializable {
         this.type = "Undefined";
         this.status = "Undefined";
         //this.emp = null;
-        this.who = "NoOne";
+        this.fromWho = "NoOne";
     }
-
-    //login employee
-    public Message(String type, String status, String login, String EmpPass, String who){
+    
+    /* 
+     * STANDARD CASES: Base Constructor
+     * 
+     * Login message for Employee:
+     * new Message("login", "Employee", 0, 0, "loginIDEmp", "EmpPass")
+     * 
+     * Login message for ATM:
+     * new Message("login", null, debitCardNumber, SecurityPin, "ATM", null)
+     * 
+     * Deposit message layout example;
+     * new Message("deposit", null, AccNum, 0, "employee", null);
+     * 
+     * Withdraw message layout example; transferBal can be used as a amount to withdraw
+     * new Message("withdraw", null, AccNum, AmountToWithdraw, "employee", null);
+     * 
+     * Check Balance message layout example;	transferBal will be used to send back amount in account; to who can be what time of account
+     * toWho in general will be null for general account
+     * 
+     * new Message("check balance", null, AccNum, 0, "ATM", null);
+     * 
+     * Transfer message:				Transfer Bal is transfer amount
+     * new Message("transfer", null, AccNum, TransferAmount, "employee", ToWho as string format); 
+     * ill parse the last parameters to ints or whatever
+     * 
+     * Close account message:
+     * new Message("close account", null, AccNum, 0, "employee", null)
+     * 
+     * Logout message:
+     * new Message("logout", null, 0, 0, null, null)
+     * 
+     * */
+    
+  //Deposit/withdraw/check balance/ transfer
+    public Message(String type, String status, double accNumOrBal, double transferBal, String fromWho, String toWho){
         setType(type);
         setStatus(status);
-        setWho(who);
-        
+        setWho(fromWho);
+        this.accNumOrBal = accNumOrBal;
+        this.transferBal = transferBal;
+        this.fromWho = fromWho;
+        this.toWho = toWho;
     }
     
   //create account
-    public Message(String type, String status, Member mem, String who){
+    public Message(String type, String status, Object mem, String who){
         setType(type);
         setStatus(status);
         setWho(who);
     }
     
+    //Usual case = login, transfer, withdraw, deposit, check balance
     private void setType(String type){
     	this.type = type;
     }
-
+    
     public void setStatus(String status){
     	this.status = status;
     }
-
+    	
+    //Usual case = account first creation
     public void setMember(Member mem){
     	this.mem = mem;
     }
     
+    //Usual case = account first creation
     public Member getMember(){
     	return mem;
     }
     
-    public void setWho(String who){
-    	this.who = who;
+    //Usual case = either ATM or EMPLOYEE; Unless transfer put accNum of sender
+    public void setWho(String fromWho){
+    	this.fromWho = fromWho;
     }
     
-
+    //Usual case = login, transfer, withdraw, deposit, check balance
     public String getType(){
     	return type;
     }
@@ -63,12 +105,34 @@ public class Message implements Serializable {
     	return status;
     }
     
+    //Login message retrieval for server
+    public String getEmpLogin(){
+    	return login;
+    }
+    
+    //login message retrieval for server
     public String getEmpPassword(){
     	return EmpPass;
     }
     
+    //put Acc Num for deposit, or withdraw. 
+    public double getAccNumOrBal(){
+    	return accNumOrBal;
+    }
+    
+    //login message retrieval for server
+    public double getTransferBalOrRegBalance(){
+    	return transferBal;
+    }
+    
+    //Usual case = either ATM or EMPLOYEE; Unless transfer put accNum of sender
     public String getWho(){
-    	return who;
+    	return fromWho;
+    }
+    
+    //Usual case = from EMPLOYEE,to transfer account put accNum of receiver; Not used to say to Server leave null
+    public String toWho() {
+    	return toWho;
     }
 
 }
