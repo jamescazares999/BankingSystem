@@ -1,18 +1,13 @@
-
 public class Checkings extends Account {
-	private int checkingNumber = 0;
-	
-	Checkings(int member) {
-		super(member);
-		checkingNumber++;
-	}
+  private int checkingNumber = 0;
 
-	public int getCheckingNumber() {
-		return checkingNumber;
-	}
+  Checkings(int member) {
+    super(member);
+    checkingNumber++;
+  }
 
-//	public void setCheckingNumber(int checkingNumber) {
-//		this.checkingNumber = checkingNumber;
-//	}
+  public int getCheckingNumber() {
+    return checkingNumber;
+  }
 
 }
