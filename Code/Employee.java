@@ -144,8 +144,8 @@ public class Employee {
    * Who is the account in question or Employee or ATM?
    */
   public double deposit(double amount, String who) throws IOException, ClassNotFoundException {
-	double parsedWho = Double.parseDouble(who);
-    message = new Message("deposit", "undefined", parsedWho, amount, "Employee", "undefined");
+	double parsedWho = 0;
+    message = new Message("deposit", "undefined", parsedWho, amount, "Employee", who);
     objOut.writeObject(message);
     objOut.reset();
     message = (Message) objIn.readObject();
@@ -154,8 +154,8 @@ public class Employee {
   }
 
   public double withdrawl(double amount, String who) throws IOException, ClassNotFoundException {
-	double parsedWho = Double.parseDouble(who);
-    message = new Message("withdrawl", "undefined", parsedWho, amount, "Employee", "undefined");
+	double parsedWho = 0;
+    message = new Message("withdrawl", "undefined", parsedWho, amount, "Employee", who);
     objOut.writeObject(message);
     objOut.reset();
     message = (Message) objIn.readObject();
@@ -164,7 +164,7 @@ public class Employee {
   }
 
   public double checkBalance(int acc) throws IOException, ClassNotFoundException {
-    message = new Message("check balance", null, acc, 0, "Employee", null);
+    message = new Message("check balance", null, 0.0, 0, "Employee", String.valueOf(acc));
     objOut.writeObject(message);
     objOut.reset();
     message = (Message) objIn.readObject();
