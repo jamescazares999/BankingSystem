@@ -1,0 +1,100 @@
+	
+public static void loadCustomer(String filename) {
+		customerSource = filename;
+		customerRecords.put(1, new Member(43772822 , "nem",21, "male",
+				"address" , 100000.25));
+//		
+//		try {
+//			File file = new File(filename);
+//			Scanner scan = new Scanner(file);
+//			scan.useDelimiter("/");
+//			while(scan.hasNextLine()) {
+//				//String temp = scan.next();
+//				String accNum = scan.next();
+//				//String pinNum = scan.next();
+//				//String routNum = scan.next();
+//				String debCNum = scan.next();
+//				String legname = scan.next();
+//				String age = scan.next();
+//				String gender = scan.next();
+//				String address = scan.next();
+//				//String social = scan.next();
+//				//String legalID = scan.next();
+//				String balance = scan.next();
+				
+				//customerRecords.put(Integer.parseInt(accNum), new Member( Integer.parseInt(debCNum),legname,Integer.parseInt(age), gender,
+				//		address, Double.parseDouble(balance)));
+				
+				
+			//}
+			//scan.close();
+		//}
+		//catch(FileNotFoundException e) {
+		//	e.printStackTrace();
+		//}
+
+	}
+
+
+public static void loadEmployee(String filename) {
+		employeeSource = filename;
+//		try {
+//			File file = new File(filename);
+//			Scanner scan = new Scanner(file);
+//			scan.useDelimiter("/");
+//			while(scan.hasNextLine()) {
+//				//String temp = scan.next();
+//				String empLog = scan.next();
+//				String empPass = scan.next();
+//				
+//				bankWorkers.put(empLog, new Employee(empPass, empLog));
+//			}
+//			scan.close();
+//		}
+//		catch(FileNotFoundException e) {
+//			e.printStackTrace();
+//		}
+		try {
+			bankWorkers.put("testrun", new Employee("testRun", "password"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+/////////
+
+public static void loadDebitCards(String filename) {
+		debitCardSource = filename;
+//		try {
+//			File file = new File(filename);
+//			Scanner scan = new Scanner(file);
+//			scan.useDelimiter("/");
+//			while(scan.hasNextLine()) {
+//				//String temp = scan.next();
+//				String CardNumber = scan.next();
+//				String SecurityCode = scan.next();
+//				String TiedAccount = scan.next();
+//				String CreatedDate = scan.next();
+//				String ExpiryDate = scan.next();
+//				String NameOnCard = scan.next();
+//				
+//				//debitCardVerify.put(Integer.parseInt(CardNumber), new DebitCard(Integer.parseInt(CardNumber), Integer.parseInt(SecurityCode),
+//				//		customerRecords.get(Integer.parseInt(TiedAccount))));
+//				//debitCardVerify.get(Integer.parseInt(CardNumber)).setCreatedDate(LocalDate.parse(CreatedDate));
+//				//debitCardVerify.get(Integer.parseInt(CardNumber)).setExpiryDate(LocalDate.parse(ExpiryDate));
+//				//debitCardVerify.get(Integer.parseInt(CardNumber)).setNameOnCard(NameOnCard);
+//			}
+//			scan.close();
+//		}
+//		catch(FileNotFoundException e) {
+//			e.printStackTrace();
+//		}
+		debitCardVerify.put(43772822, new DebitCard(43772822, 772, customerRecords.get(1)));
+	}
+
+
+
+
+
+/////////////////
