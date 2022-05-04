@@ -8,7 +8,7 @@ public class Message implements Serializable {
   protected Member mem;
   protected String fromWho;
   protected String toWho;
-  protected double accNumOrBal;
+  private double accNumOrBal;
   protected double transferBal;
 
   //can be used as debit pin or employee ID
@@ -139,5 +139,15 @@ public class Message implements Serializable {
   public String toWho() {
     return toWho;
   }
+
+public void setAccNumOrBal(double addBal) {
+	// TODO Auto-generated method stub
+	this.accNumOrBal = addBal;
+}
+
+public String getToWho() {
+	// TODO Auto-generated method stub
+	return toWho;
+}
 
 }
