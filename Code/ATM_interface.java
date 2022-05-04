@@ -42,6 +42,7 @@ public class ATM_interface {
     JTextField textField2 = new JTextField(30);
     //JPasswordField passwordField = new JPasswordField();
     JPanel panel2 = new JPanel();
+    JLabel DebLabel = new JLabel("please insert debit card number");
     JLabel pinLabel = new JLabel("Please Input Pin");
     pinLabel.setBounds(150, 220, 150, 30);
     JButton loginButton = new JButton("Submit");
@@ -86,9 +87,10 @@ public class ATM_interface {
     });
 
     //adding the panels to the GUI
+    panel2.add(DebLabel);
+    panel2.add(textField2);
     panel2.add(pinLabel);
     panel2.add(textField);
-    panel2.add(textField2);
     panel2.add(loginButton);
     frame2.getContentPane().add(panel2);
 
