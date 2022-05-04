@@ -194,11 +194,12 @@ public class BankingSystem {
         	System.out.println("Made it to logged in while loop");
           //deposit
           if (message.getType().equals("deposit")) {
-            if (message.getWho().equals("employee")) {
-              int AccNum = (int) message.getAccNumOrBal();
+            if (message.getWho().equals("Employee")) {
+              int AccNum = Integer.parseInt(message.getToWho());
               double addBal = message.getTransferBalOrRegBalance();
               double newBal = deposit(checkBalance(AccNum), addBal);
               customerRecords.get(message.getAccNumOrBal()).setBalance(newBal);
+              message.setAccNumOrBal(addBal);
               message.setStatus("Success...");
             }
             if (message.getWho().equals("ATM")) {
@@ -217,15 +218,15 @@ public class BankingSystem {
           }
 
           // if message object is withdraw message, it runs this block
-          if (message.getType().equals("withdraw") && loggedIn == true) {
-            if (message.getWho().equals("employee")) {
-              if (checkBalance((int) message.getAccNumOrBal()) < 0) {
-                message.setStatus("denied... insufficient funds.");
+          if (message.getType().equals("withdraw")) {
+            if (message.getWho().equals("Employee")) {
+              if (checkBalance(Integer.parseInt(message.getToWho())) < 0) {
+                message.setStatus("Denied... Insufficient Funds.");
               } else {
                 //change balance
                 double withdrawn = message.getTransferBalOrRegBalance();
-                double newbal = withdraw(checkBalance((int) message.getAccNumOrBal()), withdrawn);
-                customerRecords.get((int) message.getAccNumOrBal()).setBalance(newbal);
+                double newbal = withdraw(checkBalance(Integer.parseInt(message.getToWho())), withdrawn);
+                customerRecords.get(Integer.parseInt(message.getToWho())).setBalance(newbal);
                 message.setStatus("success..." + withdrawn + " amount withdrawn.");
               }
             }
@@ -251,9 +252,11 @@ public class BankingSystem {
           }
 
           // if message object is check balance message, it runs this block
-          if (message.getType().equals("check balance") && loggedIn == true) {
-            if (message.getWho().equals("employee")) {
+          if (message.getType().equals("check balance")) {
+            if (message.getWho().equals("Employee")) {
+            	double d = checkBalance(Integer.parseInt(message.getToWho()));
               message.setStatus("success..." + checkBalance((int) message.getAccNumOrBal()) + " in account.");
+              message.setAccNumOrBal(d);
             }
 
             if (message.getWho().equals("ATM")) {
@@ -360,7 +363,7 @@ public class BankingSystem {
 
   public static void loadCustomer(String filename) {
 		customerSource = filename;
-		customerRecords.put(1, new Member(43772822 , "nem",21, "male",
+		customerRecords.put(1, new Member(123 , "nem", 21, "male",
 				"address" , 100000.25));
 //		
 //		try {
