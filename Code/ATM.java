@@ -1,18 +1,7 @@
-public class Atm extends BankSystem {
+public class ATM extends Employee {
 	
-
-	
-	Atm(int idNum, int cardNum) {
-		super(idNum, cardNum);
-		// TODO Auto-generated constructor stub
-	}
-
-	public void printReceipt() {
-		
-		
-		
-		
-		
+	ATM(Employee employee){
+		super();
 	}
 
 }
