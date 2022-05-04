@@ -1,28 +1,27 @@
-
 public class Savings extends Account {
-	private int noOfDepositLeft;
-	private double maxWithDraw;
-	
-	Savings(int member) {
-		super(member);
-		this.noOfDepositLeft = 0;
-		this.maxWithDraw = 0;
-	}
+  private int noOfDepositLeft;
+  private double maxWithDraw;
 
-	public int getNoOfDepositLeft() {
-		return noOfDepositLeft;
-	}
+  Savings(int member) {
+    super(member);
+    this.noOfDepositLeft = 0;
+    this.maxWithDraw = 0;
+  }
 
-	public void setNoOfDepositLeft(int noOfDepositLeft) {
-		this.noOfDepositLeft = noOfDepositLeft;
-	}
+  public int getNoOfDepositLeft() {
+    return noOfDepositLeft;
+  }
 
-	public double getMaxWithDraw() {
-		return maxWithDraw;
-	}
+  public void setNoOfDepositLeft(int noOfDepositLeft) {
+    this.noOfDepositLeft = noOfDepositLeft;
+  }
 
-	public void setMaxWithDraw(double maxWithDraw) {
-		this.maxWithDraw = maxWithDraw;
-	}
+  public double getMaxWithDraw() {
+    return maxWithDraw;
+  }
+
+  public void setMaxWithDraw(double maxWithDraw) {
+    this.maxWithDraw = maxWithDraw;
+  }
 
 }
