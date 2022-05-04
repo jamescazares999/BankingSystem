@@ -106,11 +106,11 @@ public class Employee {
     objOut.reset();
     message = (Message) objIn.readObject();
     // if logged in it returns what to verify?// what if it fails?
-    String status = " ";
-    if (message.getStatus().equals("success")) {
-      status = "succcess";
-    }
-    return status;
+//    String status = " ";
+//    if (message.getStatus().equals("success")) {
+//      status = "succcess";
+//    }
+    return message.getStatus();
   }
 
   /*
@@ -144,7 +144,8 @@ public class Employee {
    * Who is the account in question or Employee or ATM?
    */
   public double deposit(double amount, String who) throws IOException, ClassNotFoundException {
-    message = new Message("deposit", "undefined", amount, 0.0, "undefined", "undefined");
+	double parsedWho = Double.parseDouble(who);
+    message = new Message("deposit", "undefined", parsedWho, amount, "Employee", "undefined");
     objOut.writeObject(message);
     objOut.reset();
     message = (Message) objIn.readObject();
@@ -153,7 +154,8 @@ public class Employee {
   }
 
   public double withdrawl(double amount, String who) throws IOException, ClassNotFoundException {
-    message = new Message("withdrawl", "undefined", amount, 0.0, "undefined", "undefined");
+	double parsedWho = Double.parseDouble(who);
+    message = new Message("withdrawl", "undefined", parsedWho, amount, "Employee", "undefined");
     objOut.writeObject(message);
     objOut.reset();
     message = (Message) objIn.readObject();
