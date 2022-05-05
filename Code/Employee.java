@@ -55,10 +55,10 @@ public class Employee {
    * !!!!Not yet decided!!!!****!!!!!****!!!!!!!
    */
 
-  public String newMember() { // stub
-
-    return message.getStatus();
-  }
+//  public String newMember() { // stub
+//
+//    return message.getStatus();
+//  }
 
   //open an existing account
 
@@ -72,6 +72,8 @@ public class Employee {
    * accessAccount:
    * sends Message to get Account to update from Member class sent
    */
+  
+  // The term account here referes to checkings and savings accounts
   public String openAccount(String type, String status, Member mem, String who) throws IOException, ClassNotFoundException {
     message = new Message("openAccount", "Undefined", mem, "Employee");
     objOut.writeObject(message);
