@@ -107,7 +107,7 @@ public class BankingSystem {
 
       // message object to received and then sent from/to streams
       Message message = null;
-      
+
       System.out.println("Client Made it to RUN");
 
       try {
@@ -191,6 +191,7 @@ public class BankingSystem {
 
         }
         while (loggedIn) {
+        	message = (Message) serverInputStream.readObject();
         	System.out.println("Made it to logged in while loop");
           //deposit
           if (message.getType().equals("deposit")) {
@@ -271,7 +272,7 @@ public class BankingSystem {
           }
 
           // if message object is transfer message, it runs this block
-          if (message.getType().equals("transfer") && loggedIn == true) {
+          if (message.getType().equals("transfer")) {
             if (checkBalance((int) message.getAccNumOrBal()) < message.getTransferBalOrRegBalance()) {
               message.setStatus("denied... insufficient funds.");
             } else {
@@ -289,7 +290,7 @@ public class BankingSystem {
           }
 
           // if message object is create account message, it runs this block
-          if (message.getType().equals("create account") && loggedIn == true) {
+          if (message.getType().equals("create account")) {
             //change balance
             customerRecords.put(message.getMember().getAccountNumber(), message.getMember());
             message.setStatus("success... account created.");
@@ -301,7 +302,7 @@ public class BankingSystem {
           }
 
           // if message object is delete account message, it runs this block
-          if (message.getType().equals("close account") && loggedIn == true) {
+          if (message.getType().equals("close account")) {
             //change balance
             customerRecords.remove(message.getAccNumOrBal());
             message.setStatus("success... account removed.");
@@ -319,7 +320,7 @@ public class BankingSystem {
           //}
 
           // if message object is logout message, it runs this block
-          if (message.getType().equals("logout") && loggedIn == true) {
+          if (message.getType().equals("logout")) {
 
             // change login status to success in message
             // from client
@@ -383,11 +384,11 @@ public class BankingSystem {
 //				//String social = scan.next();
 //				//String legalID = scan.next();
 //				String balance = scan.next();
-				
+
 				//customerRecords.put(Integer.parseInt(accNum), new Member( Integer.parseInt(debCNum),legname,Integer.parseInt(age), gender,
 				//		address, Double.parseDouble(balance)));
-				
-				
+
+
 			//}
 			//scan.close();
 		//}
@@ -552,3 +553,196 @@ public class BankingSystem {
   }
 
 }
+
+// 	public static void loadCustomer(String filename) {
+//		customerSource = filename;
+//		customerRecords.put(1, new Member(43772822 , "nem",21, "male",
+//				"address" , 100000.25));
+////		
+////		try {
+////			File file = new File(filename);
+////			Scanner scan = new Scanner(file);
+////			scan.useDelimiter("/");
+////			while(scan.hasNextLine()) {
+////				//String temp = scan.next();
+////				String accNum = scan.next();
+////				//String pinNum = scan.next();
+////				//String routNum = scan.next();
+////				String debCNum = scan.next();
+////				String legname = scan.next();
+////				String age = scan.next();
+////				String gender = scan.next();
+////				String address = scan.next();
+////				//String social = scan.next();
+////				//String legalID = scan.next();
+////				String balance = scan.next();
+//				
+//				//customerRecords.put(Integer.parseInt(accNum), new Member( Integer.parseInt(debCNum),legname,Integer.parseInt(age), gender,
+//				//		address, Double.parseDouble(balance)));
+//				
+//				
+//			//}
+//			//scan.close();
+//		//}
+//		//catch(FileNotFoundException e) {
+//		//	e.printStackTrace();
+//		//}
+//
+//	}
+// 	
+// 	public static void saveCustomers() {
+//		try {
+//			FileWriter file = new FileWriter(customerSource);
+//			for(int i = 0; i < customerRecords.size(); i++) {
+//				file.write(toStringCustomer(customerRecords.get(i)));
+//			}
+//		file.close();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//
+//	}
+// 	
+// 	public static String toStringCustomer(Member m) {
+// 		
+//		String info = "";
+//		info += m.getAccountNumber();
+//		info += "/";
+//		//info += m.getRoutingNumber();
+//		//info += "/";
+//		info += m.getDebitCardNumber();
+//		info += "/";
+//		info += m.getLegalName();
+//		info += "/";
+//		info += m.getAge();
+//		info += "/";
+//		info += m.getGender();
+//		info += "/";
+//		info += m.getAddress();
+//		info += "/";
+//		//info += m.getSocialSecurity();
+//		//info += "/";
+//		//info += m.getLegalIDNum();
+//		//info += "/";
+//		info += m.getBalance();
+//		
+//		return info;
+//	}
+// 	
+// 	
+// 	public static void loadEmployee(String filename) {
+//		employeeSource = filename;
+////		try {
+////			File file = new File(filename);
+////			Scanner scan = new Scanner(file);
+////			scan.useDelimiter("/");
+////			while(scan.hasNextLine()) {
+////				//String temp = scan.next();
+////				String empLog = scan.next();
+////				String empPass = scan.next();
+////				
+////				bankWorkers.put(empLog, new Employee(empPass, empLog));
+////			}
+////			scan.close();
+////		}
+////		catch(FileNotFoundException e) {
+////			e.printStackTrace();
+////		}
+//		try {
+//			bankWorkers.put("testrun", new Employee("testRun", "password"));
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
+// 	
+// 	public static void saveEmployees() {
+//		try {
+//			FileWriter file = new FileWriter(customerSource);
+//			bankWorkers.forEach((key, value) -> {
+//				try {
+//					file.write(toStringEmployee(value));
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			});
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//
+//	}
+// 	
+// 	public static String toStringEmployee(Employee e) {
+// 		
+//		String info = "";
+//		info += e.getEmployeeNumber();
+//		info += "/";
+//		info += e.getEmployeePassword();
+//		return info;
+//	}
+// 	
+// 	public static void loadDebitCards(String filename) {
+//		debitCardSource = filename;
+////		try {
+////			File file = new File(filename);
+////			Scanner scan = new Scanner(file);
+////			scan.useDelimiter("/");
+////			while(scan.hasNextLine()) {
+////				//String temp = scan.next();
+////				String CardNumber = scan.next();
+////				String SecurityCode = scan.next();
+////				String TiedAccount = scan.next();
+////				String CreatedDate = scan.next();
+////				String ExpiryDate = scan.next();
+////				String NameOnCard = scan.next();
+////				
+////				//debitCardVerify.put(Integer.parseInt(CardNumber), new DebitCard(Integer.parseInt(CardNumber), Integer.parseInt(SecurityCode),
+////				//		customerRecords.get(Integer.parseInt(TiedAccount))));
+////				//debitCardVerify.get(Integer.parseInt(CardNumber)).setCreatedDate(LocalDate.parse(CreatedDate));
+////				//debitCardVerify.get(Integer.parseInt(CardNumber)).setExpiryDate(LocalDate.parse(ExpiryDate));
+////				//debitCardVerify.get(Integer.parseInt(CardNumber)).setNameOnCard(NameOnCard);
+////			}
+////			scan.close();
+////		}
+////		catch(FileNotFoundException e) {
+////			e.printStackTrace();
+////		}
+//		debitCardVerify.put(43772822, new DebitCard(43772822, 772, customerRecords.get(1)));
+//	}
+// 	
+// 	public static void saveDebitCards(){
+//		try {
+//			FileWriter file = new FileWriter(debitCardSource);
+//			debitCardVerify.forEach((key, value) -> {
+//				try {
+//					file.write(toStringDebitCards(value));
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			});
+//
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//
+//	}
+// 	
+// 	public static String toStringDebitCards(DebitCard cd) {
+//		String info = "";
+//		info += cd.getCardNumber();
+//		info += "/";
+//		info += cd.getSecurityCode();
+//		info += "/";
+//		info += cd.getTiedAccount();
+//		info += "/";
+//		info += cd.getCreatedDate();
+//		info += "/";
+//		info += cd.getExpiryDate();
+//		info += "/";
+//		info += cd.getNameOnCard();
+//		return info;
+//	}
+// 	
+//}
