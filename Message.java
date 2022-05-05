@@ -42,7 +42,8 @@ public class Message implements Serializable {
    * new Message("check balance", null, AccNum, 0, "ATM", null); check last amount in .toWho(); to get amount
    * 
    * Transfer message:				Transfer Bal is transfer amount
-   * new Message("transfer", null, AccNum, TransferAmount, "employee", ToWho AccNum as string format); 
+   * 
+   * new Message("transfer", AccNum, 0, TransferAmount, "employee", ToWho AccNum as string format); 
    * ill parse the last parameters to ints or whatever
    * 
    * Close account message:

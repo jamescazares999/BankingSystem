@@ -19,6 +19,8 @@ public class BankingSystem {
 
   private InetAddress IP;
   private static int port = 1111;
+  
+  //Used for holding all customer and employee data 
   private static HashMap < String, Employee > bankWorkers = new HashMap < String, Employee > ();
   private static HashMap < Integer, Member > customerRecords = new HashMap < Integer, Member > ();
   private static HashMap < Integer, DebitCard > debitCardVerify = new HashMap < Integer, DebitCard > ();
@@ -287,7 +289,7 @@ public class BankingSystem {
             if (message.getWho().equals("Employee")) {
             	
             	//Makes sure balance is greater than 0
-              if (checkBalance(Integer.parseInt(message.getToWho())) < 0) {
+              if (checkBalance(Integer.parseInt(message.getToWho())) < message.getTransferBalOrRegBalance()) {
             	  
             	  //if not deny request
             	  message.setStatus("Denied... Insufficient Funds.");
@@ -367,15 +369,19 @@ public class BankingSystem {
            * */
           // if message object is transfer message, it runs this block
           if (message.getType().equals("transfer")) {
-            if (checkBalance((int) message.getAccNumOrBal()) < message.getTransferBalOrRegBalance()) {
-              message.setStatus("denied... insufficient funds.");
+            if (checkBalance(Integer.parseInt(message.getStatus())) < message.getTransferBalOrRegBalance()) {
+            	message.setStatus("denied... insufficient funds.");
             } else {
               //change balance
-              int AccNum = (int) message.getAccNumOrBal();
+              int AccNum = Integer.parseInt(message.getStatus());
               double newbal = withdraw(checkBalance(AccNum), message.getTransferBalOrRegBalance());
               customerRecords.get(AccNum).setBalance(newbal);
               customerRecords.get(Integer.parseInt(message.toWho())).setBalance(message.getTransferBalOrRegBalance());
+              
               message.setStatus("success..." + message.getTransferBalOrRegBalance() + " amount transfered" + " to " + Integer.parseInt(message.toWho()));
+              
+              //AccNum used to send back amount transfered.
+              message.setAccNumOrBal(message.getTransferBalOrRegBalance());
             }
             // sends message back to client with changes
             //serverOutputStream.reset();
