@@ -155,25 +155,26 @@ public class BankingSystem {
               } else {
                 message.setStatus("Failed... Wrong Password");
                 //logFailcounter++;
-                loggedIn = true;
+                //loggedIn = true;
               }
             } else {
               message.setStatus("Failed... Pin doesn't exist");
-              loggedIn = true;
+              //loggedIn = true;
             }
           }
 
           if (message.getWho().equals("ATM")) {
         	  System.out.println("Detected ATM");
-            int debitCardNum = (int) message.getAccNumOrBal();
+            int debitCardNum = Integer.parseInt(message.getToWho()); 
             int SecCode = (int) message.getTransferBalOrRegBalance();
             if (debitCardVerify.containsKey(debitCardNum)) {
               now = (Member) customerRecords.get(debitCardVerify.get(debitCardNum).getTiedAccount());
               if (debitCardVerify.get(debitCardNum).getSecurityCode() == SecCode) {
                   String passAccNum = String.valueOf(now.getAccountNumber());
                   message.setStatus(passAccNum);
-                  System.out.println("Client Logged in");
                   loggedIn = true;
+                  System.out.println("Client Logged in");
+                  //loggedIn = true;
                 } else {
                   message.setStatus("Failed... Wrong Pin Number");
                   //logFailcounter++;
@@ -187,12 +188,15 @@ public class BankingSystem {
           // serverOutputStream.reset();
           // sends message back to client with changes
           serverOutputStream.writeObject(message);
+          serverOutputStream.reset();
           //System.out.println("Success");
 
         }
-        while (loggedIn) {
-        	message = (Message) serverInputStream.readObject();
+        while (true) {
         	System.out.println("Made it to logged in while loop");
+        	  message = (Message) serverInputStream.readObject();
+          //Member object will hold balance for checkings and savings 
+        	
           //deposit
           if (message.getType().equals("deposit")) {
             if (message.getWho().equals("Employee")) {
@@ -312,6 +316,8 @@ public class BankingSystem {
             serverOutputStream.writeObject(message);
 
           }
+          
+          //Member object will hold balance for checkings and savings 
 
           // if message object is check logs message, it runs this block
           //if(message.getType().equals("checklogs") && loggedIn == true) {
@@ -328,7 +334,7 @@ public class BankingSystem {
 
             // sends message back to client with changes
             serverOutputStream.writeObject(message);
-            loggedIn = false;
+           break;
 
             //break;
           }
