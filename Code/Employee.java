@@ -55,10 +55,9 @@ public class Employee {
    * !!!!Not yet decided!!!!****!!!!!****!!!!!!!
    */
 
-//  public String newMember() { // stub
-//
-//    return message.getStatus();
-//  }
+  public String newMember() {
+    return message.getStatus();
+  }
 
   //open an existing account
 
@@ -74,22 +73,22 @@ public class Employee {
    */
   
   // The term account here referes to checkings and savings accounts
-  public String openAccount(String type, String status, Member mem, String who) throws IOException, ClassNotFoundException {
+  public String openAccount(Member mem) throws IOException, ClassNotFoundException {
     message = new Message("openAccount", "Undefined", mem, "Employee");
     objOut.writeObject(message);
     objOut.reset();
     message = (Message) objIn.readObject();
     return message.getStatus();
   }
-  public String closeAccount(String who, Member mem) throws IOException, ClassNotFoundException {
+  public String closeAccount(Member mem) throws IOException, ClassNotFoundException {
     message = new Message("closeAccount", "Undefined", mem, "Employee"); //
     objOut.writeObject(message);
     objOut.reset();
     message = (Message) objIn.readObject();
     return message.getStatus();
   }
-  public Member accessAcount() throws IOException, ClassNotFoundException {
-    message = new Message("getMember", "Undefined", null, "Employee"); //
+  public Member accessAcount(Member mem) throws IOException, ClassNotFoundException {
+    message = new Message("getMember", "Undefined", mem, "Employee"); //
     objOut.writeObject(message);
     objOut.reset();
     message = (Message) objIn.readObject();
