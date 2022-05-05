@@ -129,15 +129,22 @@ public class EmployeeGUI {
     JButton checkSavings = new JButton("Check Savings Balance");
     JButton checkCheckings= new JButton("Check Checking Balance");
     JButton goBack = new JButton("Return to Previous Page");
-    JButton helpMemberButton = new JButton("Help a Current Member");
+    JButton editMemberButton = new JButton("Help a Current Member");
     JButton createMemberButton = new JButton("Create a New Member");
+    JButton removeMemberButton = new JButton("Delete an Existing Member");
     // goBack.setEnabled(false);
     
     createMemberButton.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
         	try {
+        		String memberName = JOptionPane.showInputDialog("Enter Member Name: ");
+        		int memberAge = Integer.parseInt(JOptionPane.showInputDialog("Enter Member Age: "));
+        		String memberGender = JOptionPane.showInputDialog("Enter Member Gender: ");
+        		String memberAddress = JOptionPane.showInputDialog("Enter Member Address: ");
         		
-				employee.openAccount(passedAccNum, passedAccNum, null, passedAccNum);
+        		Member newMem = new Member(0, memberName, memberAge, memberGender, memberAddress, 0);
+        		
+				employee.openAccount(newMem);
 			} catch (ClassNotFoundException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -148,11 +155,38 @@ public class EmployeeGUI {
         }
       });
     
-    helpMemberButton.addActionListener(new ActionListener() {
+    removeMemberButton.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
         	try {
-        		String memberSearch = JOptionPane.showInputDialog("Enter Account Number to Help: ");
-				employee.accessAcount(memberSearch);
+        		String memberName = JOptionPane.showInputDialog("Enter Member Name: ");
+        		int memberAge = Integer.parseInt(JOptionPane.showInputDialog("Enter Member Age: "));
+        		String memberGender = JOptionPane.showInputDialog("Enter Member Gender: ");
+        		String memberAddress = JOptionPane.showInputDialog("Enter Member Address: ");
+        		
+        		Member newMem = new Member(0, memberName, memberAge, memberGender, memberAddress, 0);
+        		
+				employee.closeAccount(newMem);
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+        }
+      });
+    
+    editMemberButton.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+        	try {
+        		String memberName = JOptionPane.showInputDialog("Enter Member Name: ");
+        		int memberAge = Integer.parseInt(JOptionPane.showInputDialog("Enter Member Age: "));
+        		String memberGender = JOptionPane.showInputDialog("Enter Member Gender: ");
+        		String memberAddress = JOptionPane.showInputDialog("Enter Member Address: ");
+        		
+        		Member newMem = new Member(0, memberName, memberAge, memberGender, memberAddress, 0);
+        		
+				employee.accessAcount(newMem);
 			} catch (ClassNotFoundException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -279,6 +313,12 @@ public class EmployeeGUI {
     panel.add(checkSavings);
 
     panel.add(checkCheckings);
+    
+    panel.add(editMemberButton);
+    
+    panel.add(createMemberButton);
+    
+    panel.add(removeMemberButton);
 
     //panel.add(textField2);
     frame.getContentPane().add(panel);
