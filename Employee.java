@@ -101,7 +101,7 @@ public class Employee {
    */
 
   public String sendDebit(int debitCardNumber, int code) throws IOException, ClassNotFoundException {
-    message = new Message("login", null, 0, code, "ATM", String.valueOf(debitCardNumber)); //ATM or Employee too?
+    message = new Message("login", String.valueOf(debitCardNumber), 0, 0, "ATM", String.valueOf(debitCardNumber)); //ATM or Employee too?
     objOut.writeObject(message);
     objOut.reset();
     message = (Message) objIn.readObject();
